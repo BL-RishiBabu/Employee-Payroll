@@ -17,7 +17,7 @@ public class EmployeePayrollMain {
         while (running) {
             System.out.println();
             System.out.println("1. Add employee payroll record");
-            System.out.println("2. Print current payroll records");
+            System.out.println("2. Print current payroll records (UC-5)");
             System.out.println("3. Write payroll data to file");
             System.out.println("4. Read payroll data from file");
             System.out.println("5. Count payroll records in file");

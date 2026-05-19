@@ -41,9 +41,7 @@ public class EmployeePayrollService {
                 return;
             }
             System.out.println("Employee payroll data from file:");
-            for (EmployeePayrollData employee : employees) {
-                System.out.println(employee);
-            }
+            printFormatted(employees);
         } catch (IOException e) {
             System.err.println("Unable to read payroll data from file: " + e.getMessage());
         }
@@ -55,9 +53,7 @@ public class EmployeePayrollService {
             return;
         }
         System.out.println("Employee payroll data in memory:");
-        for (EmployeePayrollData employee : employeeList) {
-            System.out.println(employee);
-        }
+        printFormatted(employeeList);
     }
 
     public void printEntryCount() {
@@ -113,11 +109,21 @@ public class EmployeePayrollService {
                 return;
             }
             System.out.println("Employees read from serialized file:");
-            for (EmployeePayrollData emp : employees) {
-                System.out.println(emp);
-            }
+            printFormatted(employees);
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Failed to read serialized payroll data: " + e.getMessage());
+        }
+    }
+
+    private void printFormatted(List<EmployeePayrollData> list) {
+        if (list == null || list.isEmpty()) {
+            System.out.println("No employee payroll data to display.");
+            return;
+        }
+        System.out.printf("%-6s %-20s %12s%n", "ID", "Name", "Salary");
+        System.out.println("------------------------------------------------");
+        for (EmployeePayrollData e : list) {
+            System.out.printf("%-6d %-20s %12.2f%n", e.getId(), e.getName(), e.getSalary());
         }
     }
 }
