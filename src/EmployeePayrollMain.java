@@ -33,7 +33,9 @@ public class EmployeePayrollMain {
             System.out.println("15. Append all in-memory employees to file (UC-4)");
             System.out.println("16. Serialize payroll data to binary (UC-4)");
             System.out.println("17. Read serialized payroll data (UC-4)");
-            System.out.println("18. Exit");
+            System.out.println("18. Analyze payroll from file (UC-6)");
+            System.out.println("19. Analyze payroll in memory (UC-6)");
+            System.out.println("20. Exit");
             System.out.print("Choose an option: ");
 
             String option = scanner.nextLine().trim();
@@ -113,11 +115,13 @@ public class EmployeePayrollMain {
                 case "15" -> payrollService.appendAllEmployeesToFile();
                 case "16" -> payrollService.serializePayrollData();
                 case "17" -> payrollService.readSerializedPayrollData();
-                case "18" -> {
+                case "18" -> payrollService.analyzePayrollFromFile();
+                case "19" -> payrollService.analyzePayrollInMemory();
+                case "20" -> {
                     running = false;
                     System.out.println("Exiting Employee Payroll Service.");
                 }
-                default -> System.out.println("Invalid option. Please choose a number from 1 to 18.");
+                default -> System.out.println("Invalid option. Please choose a number from 1 to 20.");
             }
         }
 

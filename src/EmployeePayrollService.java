@@ -1,7 +1,9 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class EmployeePayrollService {
     private final List<EmployeePayrollData> employeeList;
@@ -125,5 +127,43 @@ public class EmployeePayrollService {
         for (EmployeePayrollData e : list) {
             System.out.printf("%-6d %-20s %12.2f%n", e.getId(), e.getName(), e.getSalary());
         }
+    }
+
+    public void analyzePayrollFromFile() {
+        try {
+            List<EmployeePayrollData> employees = fileIOService.readData();
+            if (employees.isEmpty()) {
+                System.out.println("No payroll data found in file to analyze.");
+                return;
+            }
+            analyzeAndPrint(employees);
+        } catch (IOException e) {
+            System.err.println("Unable to read payroll data for analysis: " + e.getMessage());
+        }
+    }
+
+    public void analyzePayrollInMemory() {
+        if (employeeList.isEmpty()) {
+            System.out.println("No payroll data in memory to analyze.");
+            return;
+        }
+        analyzeAndPrint(employeeList);
+    }
+
+    private void analyzeAndPrint(List<EmployeePayrollData> list) {
+        DoubleSummaryStatistics stats = list.stream().collect(Collectors.summarizingDouble(EmployeePayrollData::getSalary));
+        System.out.println("Payroll Analysis:");
+        System.out.println("- Number of entries: " + stats.getCount());
+        System.out.printf("- Total salary: %.2f%n", stats.getSum());
+        System.out.printf("- Average salary: %.2f%n", stats.getAverage());
+        double min = list.stream().mapToDouble(EmployeePayrollData::getSalary).min().orElse(0.0);
+        double max = list.stream().mapToDouble(EmployeePayrollData::getSalary).max().orElse(0.0);
+        System.out.printf("- Min salary: %.2f%n", min);
+        System.out.printf("- Max salary: %.2f%n", max);
+        System.out.println("Top 3 highest paid employees:");
+        list.stream()
+                .sorted((a, b) -> Double.compare(b.getSalary(), a.getSalary()))
+                .limit(3)
+                .forEach(e -> System.out.printf("  %d - %s: %.2f%n", e.getId(), e.getName(), e.getSalary()));
     }
 }
