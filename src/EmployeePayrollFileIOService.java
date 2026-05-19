@@ -1,4 +1,4 @@
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,9 +9,12 @@ import java.util.List;
 public class EmployeePayrollFileIOService {
     private static final String PAYROLL_FILE = "employee_payroll_data.txt";
     private final Path payrollFilePath;
+    private static final String PAYROLL_SER_FILE = "employee_payroll_data.ser";
+    private final Path payrollSerPath;
 
     public EmployeePayrollFileIOService() {
         this.payrollFilePath = Paths.get(PAYROLL_FILE);
+        this.payrollSerPath = Paths.get(PAYROLL_SER_FILE);
     }
 
     public void writeData(List<EmployeePayrollData> employeeList) throws IOException {
@@ -52,5 +55,32 @@ public class EmployeePayrollFileIOService {
 
     public String getFilePath() {
         return payrollFilePath.toAbsolutePath().toString();
+    }
+
+    public void appendEmployee(EmployeePayrollData employee) throws IOException {
+        String line = employee.toString() + System.lineSeparator();
+        Files.write(payrollFilePath, line.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+    }
+
+    public void appendData(List<EmployeePayrollData> employeeList) throws IOException {
+        List<String> lines = new ArrayList<>();
+        for (EmployeePayrollData employee : employeeList) {
+            lines.add(employee.toString());
+        }
+        Files.write(payrollFilePath, lines, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+    }
+
+    public void serializeData(List<EmployeePayrollData> employeeList) throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(payrollSerPath.toFile()))) {
+            oos.writeObject(employeeList);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<EmployeePayrollData> readSerializedData() throws IOException, ClassNotFoundException {
+        if (!Files.exists(payrollSerPath)) return new ArrayList<>();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(payrollSerPath.toFile()))) {
+            return (List<EmployeePayrollData>) ois.readObject();
+        }
     }
 }

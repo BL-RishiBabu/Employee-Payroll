@@ -29,7 +29,11 @@ public class EmployeePayrollMain {
             System.out.println("11. List directory contents (UC-2)");
             System.out.println("12. Start watching a directory (UC-3)");
             System.out.println("13. Stop watching directory (UC-3)");
-            System.out.println("14. Exit");
+            System.out.println("14. Append last added employee to file (UC-4)");
+            System.out.println("15. Append all in-memory employees to file (UC-4)");
+            System.out.println("16. Serialize payroll data to binary (UC-4)");
+            System.out.println("17. Read serialized payroll data (UC-4)");
+            System.out.println("18. Exit");
             System.out.print("Choose an option: ");
 
             String option = scanner.nextLine().trim();
@@ -105,11 +109,15 @@ public class EmployeePayrollMain {
                         System.out.println("No active directory watch to stop.");
                     }
                 }
-                case "14" -> {
+                case "14" -> payrollService.appendLastEmployeeToFile();
+                case "15" -> payrollService.appendAllEmployeesToFile();
+                case "16" -> payrollService.serializePayrollData();
+                case "17" -> payrollService.readSerializedPayrollData();
+                case "18" -> {
                     running = false;
                     System.out.println("Exiting Employee Payroll Service.");
                 }
-                default -> System.out.println("Invalid option. Please choose a number from 1 to 14.");
+                default -> System.out.println("Invalid option. Please choose a number from 1 to 18.");
             }
         }
 

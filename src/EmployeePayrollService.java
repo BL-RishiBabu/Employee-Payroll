@@ -68,4 +68,56 @@ public class EmployeePayrollService {
             System.err.println("Unable to count payroll entries: " + e.getMessage());
         }
     }
+
+    public void appendLastEmployeeToFile() {
+        if (employeeList.isEmpty()) {
+            System.out.println("No employee in memory to append.");
+            return;
+        }
+        EmployeePayrollData last = employeeList.get(employeeList.size() - 1);
+        try {
+            fileIOService.appendEmployee(last);
+            System.out.println("Appended employee to file: " + last);
+        } catch (IOException e) {
+            System.err.println("Failed to append employee: " + e.getMessage());
+        }
+    }
+
+    public void appendAllEmployeesToFile() {
+        if (employeeList.isEmpty()) {
+            System.out.println("No employees in memory to append.");
+            return;
+        }
+        try {
+            fileIOService.appendData(employeeList);
+            System.out.println("Appended " + employeeList.size() + " employees to file: " + fileIOService.getFilePath());
+        } catch (IOException e) {
+            System.err.println("Failed to append employees: " + e.getMessage());
+        }
+    }
+
+    public void serializePayrollData() {
+        try {
+            fileIOService.serializeData(employeeList);
+            System.out.println("Serialized payroll data to file.");
+        } catch (IOException e) {
+            System.err.println("Failed to serialize payroll data: " + e.getMessage());
+        }
+    }
+
+    public void readSerializedPayrollData() {
+        try {
+            List<EmployeePayrollData> employees = fileIOService.readSerializedData();
+            if (employees.isEmpty()) {
+                System.out.println("No serialized payroll data found.");
+                return;
+            }
+            System.out.println("Employees read from serialized file:");
+            for (EmployeePayrollData emp : employees) {
+                System.out.println(emp);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Failed to read serialized payroll data: " + e.getMessage());
+        }
+    }
 }
